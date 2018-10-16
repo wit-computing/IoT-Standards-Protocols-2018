@@ -1,0 +1,272 @@
+
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-rc.10/css/uikit.min.css"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-rc.10/js/uikit.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-rc.10/js/uikit-icons.min.js"></script>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/railscasts.min.css"/>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/java.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+  </head>
+  <style>
+    
+
+body {
+  font-family: "Open Sans", "Helvetica", "Helvetica Neue",  "Arial", sans-serif;
+  font-size:90%;
+  color: black;
+}
+
+p {
+  margin: 0.5em;
+}
+
+pre code {
+  font-family: "Monaco";
+  font-size: 100%;
+}
+
+img {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  margin:10px;
+}
+
+h1, h2, h3 {
+  border-bottom:thin solid black;
+  margin-bottom: 0.5em;
+  margin-top: 1em;
+}
+
+h1 {
+  font-style:italic;
+  font-size:130%;
+}
+
+h2 {
+  font-size:110%;
+}
+
+h3 {
+  font-size:100%;
+}
+
+
+
+  </style>
+
+  <body class="lab">
+
+    
+  <div class="uk-offcanvas-content">
+    <div id="offcanvas-usage" uk-offcanvas>
+      <div class="uk-offcanvas-bar">
+        <button class="uk-offcanvas-close" type="button" uk-close></button>
+        <ul class="uk-nav">
+          
+            
+              <li>
+                <a class="item" href="http://wit-computing.github.io/IoT-Standards-Protocols-2018//topic-05/book-a/index.html">
+  <i class="fas fa-flask " style="color:#00BCD4"> </i>
+Presence Detector 1
+                </a>
+              </li>
+            
+          
+            
+              <li>
+                <a class="item" href="http://wit-computing.github.io/IoT-Standards-Protocols-2018//topic-05/book-b/index.html">
+  <i class="fas fa-flask " style="color:#00BCD4"> </i>
+BLE
+                </a>
+              </li>
+            
+          
+            
+              <li>
+                <a class="item" href="http://wit-computing.github.io/IoT-Standards-Protocols-2018//topic-05/book-c/index.html">
+  <i class="fas fa-flask " style="color:#00BCD4"> </i>
+BLE-Beacons
+                </a>
+              </li>
+            
+          
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+    <div uk-sticky>
+      <nav class="uk-navbar">
+        <div class="uk-navbar-left">
+          <ul class="uk-subnav uk-background-secondary uk-subnav-pill">
+            <li><a href="#offcanvas-usage" uk-icon="icon: menu" , uk-toggle title="Switch Lab" pos="bottom"
+                   uk-tooltip></a></li>
+            
+              <li class="uk-active"><a href="../index.html" uk-icon="icon: chevron-up" uk-toggle title="Parent Topic"
+                                     pos="bottom" uk-tooltip> Wireless Communication Networks </a></li>
+            
+          </ul>
+        </div>
+        <div class="uk-navbar-right">
+          <ul class="uk-subnav uk-background-secondary uk-subnav-pill"
+              uk-switcher="connect: .switcher-container">
+            
+              <li><a href="#">BLE-Beacons</a></li>
+            
+              <li><a href="#">Equipment</a></li>
+            
+              <li><a href="#">Headless-Pi</a></li>
+            
+              <li><a href="#">Configure-Beacon</a></li>
+            
+              <li><a href="#">Run_as_Service</a></li>
+            
+              <li><a href="#">Eddystone-URL</a></li>
+            
+          </ul>
+        </div>
+      </nav>
+    </div>
+
+    <div class="uk-container uk-container-expand">
+      <ul class="uk-switcher switcher-container">
+        
+          <li> <h1>Bluetooth Low Energy</h1>
+<p>Beacons · Eddystone</p>
+<h2>Raspberry Pi as a Beacon</h2>
+<p>Beacons are one-way transmitters that are used to mark important places and objects. Standards are emerging in the beacon space, including Apple&#39;s iBeacon and Google&#39;s Eddystone beacon platform. 
+A beacon is detectable to a user&#39;s device from a range of a few meters, using Bluetooth Low Energy to provide contextual information to devices and applications. 
+In this lab we will use a Raspberry Pi to create a beacon. </p>
+</li>
+        
+          <li> <h2>Equipment</h2>
+<ul>
+<li>Raspberry Pi 3</li>
+<li>SD card with a reasonably current version of Raspbian</li>
+<li>Mobile phone with internet access</li>
+<li>Ethernet cable</li>
+</ul>
+<h3>Raspbian</h3>
+<p>Put the current stable version of Raspbian on a SSD card. You may have this already.</p>
+</li>
+        
+          <li> <h3>Configure Raspberry Pi for Headless</h3>
+<p>We&#39;re using the Pi as a beacon so we do not need to access the user interface - we can do what we need using Secure Socket Shell (SSH). It would also be handy if we could connect directly to the pi from a laptop.
+Check out this tutorial for doing just that: </p>
+<p><a href="https://hackernoon.com/raspberry-pi-headless-install-462ccabd75d0">Headless Tutorial</a></p>
+<p><a href="https://www.dexterindustries.com/howto/connecting-raspberry-pi-without-monitor-beginners/">Dexter Labs Tutorial</a></p>
+</li>
+        
+          <li> <h2>Set up Beacon</h2>
+<p>You can use hciconfig and hcitool to configure Bluetooth devices. We will create the following to make the pi act as a beacon:
+- A start script
+- A stop script
+- A config file</p>
+<ul>
+<li>On your pi create the directory  <code>/home/pi/beacon</code></li>
+<li>In <code>/home/pi/beacon</code>, create a file called <code>beacon.conf</code> and add the following contents:</li>
+</ul>
+<pre><code>#BLE beacon configuration
+export BLUETOOTH_DEVICE=hci0
+export UUID=&quot;e2 c5 6d b5 df fb 48 d2 b0 60 d0 f5 a7 10 96 e0&quot;
+export MAJOR=&quot;00 16&quot;
+export MINOR=&quot;00 08&quot;
+export POWER=&quot;c5&quot;</code></pre>
+<ul>
+<li><p>In the same folder, create a file called <code>beacon_start</code> with the following contents</p>
+<pre><code>#!/bin/sh
+. ./beacon.conf
+echo &quot;Launching virtual beacon...&quot;
+sudo hciconfig $BLUETOOTH_DEVICE up
+sudo hciconfig $BLUETOOTH_DEVICE noleadv
+sudo hciconfig $BLUETOOTH_DEVICE leadv 3
+sudo hcitool -i hci0 cmd 0x08 0x0008 14 02 01 06 03 03 aa fe 0c 16 aa fe 10 00 01 77 69 74 2e 69 65 00 00 00 00 00 00 00 00 00 00 00
+echo &quot;Complete&quot;</code></pre>
+</li>
+<li><p>In the same folder, create a file called <code>beacon_stop</code> with the following contents</p>
+</li>
+</ul>
+<pre><code>#!/bin/sh
+. ./beacon.conf
+echo &quot;Disabling virtual iBeacon...&quot;
+sudo hciconfig $BLUETOOTH_DEVICE noleadv
+echo &quot;Complete&quot;</code></pre>
+<h3>Turn the beacon on</h3>
+<ul>
+<li>Run the start script as sudo and you should see the beacon. Using your smart phone, download a free beacon locator. You should see the beacon and an indication of it&#39;s proximity.</li>
+</ul>
+</li>
+        
+          <li> <h2>Run as a Service</h2>
+<p>You will want the beacon to start when you reboot the pi. 
+Ìn /etc/init.d/ create a file called <code>beacon</code> with the following contents:</p>
+<pre><code class="lang-bash">#!/bin/bash
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:$PATH
+
+DESC=&quot;Beacon Application Software&quot;
+PIDFILE=/var/run/beacon.pid
+SCRIPTNAME=/etc/init.d/beacon
+
+case &quot;$1&quot; in
+  start)
+    printf &quot;%-50s&quot; &quot;Starting beacon...&quot;
+    cd /home/pi/beacon
+    sudo ./beacon_start
+    ;;
+  stop)
+    printf &quot;%-50s&quot; &quot;Stopping beacon...&quot;
+    cd /home/pi/beacon
+    sudo ./beacon_stop
+    ;;
+  restart)
+    $0 stop
+   $0 start
+    ;;
+  *)
+    echo &quot;Usage: $0 {start|stop|restart}&quot;
+    exit 1
+esac</code></pre>
+<p>Now make the file executable by running the following command as the sudo user:</p>
+<pre><code>sudo chmod +x /etc/init.d/beacon</code></pre>
+<p>We want the beacon to run as a service. We can use <code>update-rc.d</code> to register the service and configure it to start when the pi boots, and stop when it shuts down. Run the following to do this. </p>
+<pre><code class="lang-bash">sudo update-rc.d beacon start 80 2 3 4 5 . stop 30 0 1 6 .</code></pre>
+</li>
+        
+          <li> <h2>Eddystone-URL</h2>
+<p>Reconfigure your pi beacon to be an Eddystone URL beacon.
+Refer to the following tutorial as a guide:</p>
+<p><a href="https://webgazer.org/update/tutorial/2016/03/16/raspberrypi-eddystone-url.html">Eddystone URL Beacon</a></p>
+</li>
+        
+      </ul>
+    </div>
+
+    <script>
+      $(document).ready(function() {
+  const $images = $('.lab img');
+  jQuery.each($images, function(i) {
+    if ($images[i].alt.length > 0) {
+      const divImg = $(document.createElement('div')).addClass('');
+      $($images[i]).wrap(divImg);
+      const divLabel = $(document.createElement('div')).addClass('uk-label uk-text-lowercase');
+      divLabel.append($images[i].alt);
+      $(divLabel).insertAfter($images[i]);
+      $('<br>').insertAfter($images[i]);
+    }
+  });
+});
+
+    </script>
+  </body>
+</html>
