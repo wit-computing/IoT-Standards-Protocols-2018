@@ -416,13 +416,20 @@ Save and exit the Crontab and reboot the RPi by typing <code>sudo reboot</code> 
 The BLE device should start advertising in the background on every reboot of the RPi.</p>
 </li>
         
-          <li> <h1>Exercises</h1>
-<p>Update the Light Switch characteristic that turns the LED Matrix on and off. You should consider the following:  </p>
-<ul>
-<li>The Smart light has two states: <code>on</code> and <code>off</code></li>
-<li>If the state is set to off, <code>sense.clear()</code> can &quot;turns off&quot; the LED matrix</li>
-<li>If the state is on, the LED matrix should be set to the <code>value</code> of the light colour characteristic (<code>sense.clear(value[0],value[1],value[2])</code>) </li>
-</ul>
+          <li> <h1>Exercises/Report</h1>
+<p>Include the following in your lab report</p>
+<ol>
+<li>If possible, include screen shots of your service working. </li>
+<li>Lessons learned</li>
+<li>Issues encountered and how you resolved them.</li>
+<li>Final version of the code you created (or a link to an online repository)</li>
+<li>We used the <code>hciconfig</code> command in this lab. Investigate and explain how this command could be used to turn the Raspberry Pi into a broadcast-only BLE device. </li>
+<li>Explain how the <code>hcitool</code> command can be used to advertise data. </li>
+</ol>
+<h2>Optional:</h2>
+<ol>
+<li>Include a <code>Light Switch</code> characteristic in the SmartLight service that turns the LED Matrix on and off. You should consider the following:<br>The light has two states: <code>on</code> and <code>off</code>. If the state is set to off, the LED matrix should be off. If the state is on, the LED matrix should be set to the <code>value</code> of the light colour characteristic (<code>sense.clear(value[0],value[1],value[2])</code>).</li>
+</ol>
 </li>
         
       </ul>
