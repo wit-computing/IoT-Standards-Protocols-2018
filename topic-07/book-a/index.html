@@ -375,12 +375,13 @@ db = TinyDB(&#39;db.json&#39;)</code></pre>
 </ul>
 <pre><code class="lang-python">...
 # Start subscribe, with QoS level 0
-mqttc.subscribe(base_topic+&quot;/temp&quot;, 0)
+mqttc.subscribe(base_topic+&quot;/temperature&quot;, 0)
 ...</code></pre>
 <ul>
-<li>In the <code>on_message</code> callback function, add the following line of code to insert the JSON into the DB</li>
+<li>Replace the contents of the <code>on_message</code> callback function with the following to insert the JSON into the DB:</li>
 </ul>
-<pre><code class="lang-python">db.insert({&#39;temperature&#39;: temp, &#39;timestamp&#39;: time.time()})</code></pre>
+<pre><code class="lang-python">  print(&quot;Insering into DB: &quot;+msg.payload)
+  db.insert(msg.payload)</code></pre>
 </li>
 <li><p>Now run <code>persist_sub.py</code>. Any temperature data published will now be persisted to the DB.</p>
 </li>
@@ -421,7 +422,7 @@ mqttc.subscribe(base_topic+&quot;/temp&quot;, 0)
 {u&#39;timestamp&#39;: 1541453530.868686, u&#39;temperature&#39;: 34.74}
 {u&#39;timestamp&#39;: 1541453545.887301, u&#39;temperature&#39;: 34.5}</code></pre>
 </li>
-<li><p>Find all occurrences of  temperature less than 18.8:</p>
+<li><p>Find all occurrences of  temperature less than 34.5:</p>
 </li>
 </ul>
 <pre><code class="lang-python">&gt;&gt;&gt; Temp = Query()
@@ -440,13 +441,13 @@ print(min(temps))
 print(max(temps))
 print(sum(temps)/len(temps))</code></pre>
 <h3>Web API</h3>
-<p>Lets assume you wish to make the above temperature available via a web API. This might be useful for weather station dashboard or other applications, both current and in the future, that need access to the data.</p>
+<p>Lets assume you wish to make the temperature data available via a web API. This might be useful for weather station dashboard or other applications, both current and in the future, that need access to the data.</p>
 <ul>
 <li>Install Flask</li>
 </ul>
 <pre><code class="lang-bash">pip install flask</code></pre>
 <ul>
-<li>To allow cross origin requests (CORS). We will also use the <code>flask-cors</code> library. Although not used in this lab, it would be usefull if you use this API in another web application/web site.</li>
+<li>To allow cross origin requests (CORS). We will also use the <code>flask-cors</code> library. Although not used in this lab, it would be useful if you use this API in another web application/web site.</li>
 </ul>
 <pre><code class="lang-bash">pip install -U flask-cors</code></pre>
 <p>Flask is a web framework written in Python that allow you, among other things, to implement web APIs.</p>
@@ -472,52 +473,93 @@ def temp_items(start,end):
     temps = Query()
     return db.search((temps.timestamp &gt;= start) &amp; (temps.timestamp &lt;= end))</code></pre>
 <p>You will create an API according to the following design:</p>
+<p><img src="./img/api.png" alt="Sense Web API"></p>
 <ul>
-<li>Write a python program called <code>temp_api.py</code> that exposes the above module functions as a web API :
-~~~python
-from flask import Flask, request
+<li>Write a python program called <code>sense_api.py</code> that exposes the above module functions as a web API :</li>
+</ul>
+<pre><code class="lang-python">from flask import Flask, request
 from flask_cors import CORS
 import temp_db_data
-from datetime import datetime</li>
-</ul>
-<p>app = Flask(<strong>name</strong>)
-CORS(app)</p>
-<p>@app.route(&#39;/fxwalsh/home/temp/max&#39;)
-def temp_max():
-    max_temp=str(temp_db_data.max_temp())
-    return max_temp</p>
-<p>@app.route(&#39;/fxwalsh/home/temp/min&#39;)
-def temp_min():
-    return str(temp_db_data.min_temp())</p>
-<p>@app.route(&#39;/fxwalsh/home/temp/ave&#39;)
-def temp_ave():
-    return str(temp_db_data.mean_temp())</p>
-<p>@app.route(&#39;/fxwalsh/home/temp&#39;)
-def temp_data():
-    start_date=request.args.get(&#39;start_date&#39;)
-    end_date=request.args.get(&#39;end_date&#39;)
-    datetime_start = datetime.strptime(start_date, &#39;%Y-%m-%d&#39;)
-    datetime_end = datetime.strptime(end_date, &#39;%Y-%m-%d&#39;)
-    return str(temp_db_data.temp_items(datetime_start.timestamp(), datetime_end.timestamp()))</p>
-<pre><code>
-Finally, configure Flask to use your service and run it by entering the following commands at the command line(**Note: this is for  Unix/RPi):
+from sense_hat import SenseHat
 
-~~~bash
-FLASK_APP=hello.py
+sense = SenseHat()
+#clear sensehat
+sense.clear()
+
+
+app = Flask(__name__)
+CORS(app)
+
+@app.route(&#39;/sensehat/temp&#39;,methods=[&#39;GET&#39;])
+def current_temp():
+    temp=round(sense.get_temperature(),2)
+    return str(temp)
+
+@app.route(&#39;/sensehat/temp/&lt;metric&gt;&#39;,methods=[&#39;GET&#39;])
+def temp_metric(metric):
+    if (metric== &quot;mean&quot;): 
+        return str(temp_db_data.mean_temp())
+    if (metric== &quot;max&quot;):
+        return str(temp_db_data.max_temp())
+    if (metric== &quot;min&quot;): 
+        return str(temp_db_data.min_temp())
+    return &quot;Metric not found&quot;
+
+@app.route(&#39;/sensehat/light&#39;,methods=[&#39;POST&#39;])
+def light_post():
+    state=request.args.get(&#39;state&#39;)
+    print (state)
+    if (state==&quot;on&quot;):
+        sense.clear(255,255,255)
+        light_state=&quot;on&quot;
+    return &#39;{&quot;state&quot;:&quot;on&quot;}&#39;
+    else: 
+        sense.clear(0,0,0)
+    light_state=&quot;off&quot;
+        return &#39;{&quot;state&quot;:&quot;off&quot;}&#39;
+
+@app.route(&#39;/sensehat/light&#39;,methods=[&#39;GET&#39;])
+def light_get():
+    #check top left pixel value(==0 - off, &gt;0 - on) 
+    print(sense.get_pixel(0, 0)) 
+    if sense.get_pixel(0, 0)[0] == 0:
+        return &#39;{&quot;state&quot;:&quot;off&quot;}&#39;
+    else:
+    return &#39;{&quot;state&quot;:&quot;on&quot;}&#39;
+
+if __name__ == &quot;__main__&quot;:
+    app.run(host=&#39;0.0.0.0&#39;, port=5000, debug=True)</code></pre>
+<p>Finally, configure Flask to use your service and run it by entering the following commands at the command line(**Note: this is for  Unix/RPi):</p>
+<pre><code class="lang-bash">FLASK_APP=hello.py
 python temp_api.py</code></pre>
 <p>This will start the HTTP server on port 5000. 
 You should now be able to access the API using HTTP.</p>
 <h3>Curl it</h3>
-<p>You can use <a href="https://curl.haxx.se/">Curl</a> to check if the API is responding. 
-+ Find the IP address of the RPi using the <code>ifconfig</code> command
-+ Run <code>Curl GET</code> to request the URL resource you want...</p>
-<pre><code class="lang-bash">curl YOUR_PI_IP:5000/home/temp/max</code></pre>
+<p>You can use <a href="https://curl.haxx.se/">Curl</a> to check if the API is responding. </p>
 <ul>
-<li>You can query temp data for a particular day by supplying a start and end date in the URL query string.</li>
+<li>Find the IP address of the RPi using the <code>ifconfig</code> command</li>
+<li>Run <code>Curl GET</code> to request the URL resource you want...</li>
 </ul>
-<pre><code class="lang-bash">curl YOUR_PI_IP:5000/home/temp?start=2018-11-2&amp;end=2018-11-3</code></pre>
+<pre><code class="lang-bash">curl http://YOUR_PI_IP:5000/sensehat/temp</code></pre>
 <ul>
-<li>Find out the IP address of other people in your lab group. You should be able to request the temperature from their APIs also.</li>
+<li>Enter the above URL into the address field of a browser and you should see something similar to the following:</li>
+</ul>
+<p><img src="./img/browser.png" alt="Browser HTTP Request"></p>
+<ul>
+<li>Get the mean temperature as follows:</li>
+</ul>
+<pre><code class="lang-bash">curl http://YOUR_PI_IP:5000/sensehat/temp/mean</code></pre>
+<p>+Now try getting minimum and maximum recorded temperature by requesting <code>sensehat/temp/min</code> and <code>sensehat/temp/max</code></p>
+<ul>
+<li>Turn on the LED array (light) using a  <code>HTTP POST</code> request to <code>/sensehat/light</code> with the query string <code>state=on</code> as follows:</li>
+</ul>
+<pre><code class="lang-bash">curl -X POST http://YOUR_PI_IP:5000/sensehat/light?state=on</code></pre>
+<ul>
+<li>Turn it off using a query string <code>state=off</code></li>
+</ul>
+<pre><code class="lang-bash">curl -X POST http://YOUR_PI_IP:5000/sensehat/light?state=off</code></pre>
+<ul>
+<li>Find out the IP address of other people in your lab group. You should be able to make requests to their APIs also.</li>
 </ul>
 
         </div>
