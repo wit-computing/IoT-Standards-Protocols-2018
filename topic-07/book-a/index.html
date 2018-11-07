@@ -483,7 +483,8 @@ import temp_db_data
 from sense_hat import SenseHat
 
 sense = SenseHat()
-#clear sensehat
+
+#clear sensehat and intialise light_state
 sense.clear()
 
 
@@ -511,11 +512,9 @@ def light_post():
     print (state)
     if (state==&quot;on&quot;):
         sense.clear(255,255,255)
-        light_state=&quot;on&quot;
-    return &#39;{&quot;state&quot;:&quot;on&quot;}&#39;
+        return &#39;{&quot;state&quot;:&quot;on&quot;}&#39;
     else: 
         sense.clear(0,0,0)
-    light_state=&quot;off&quot;
         return &#39;{&quot;state&quot;:&quot;off&quot;}&#39;
 
 @app.route(&#39;/sensehat/light&#39;,methods=[&#39;GET&#39;])
@@ -525,7 +524,7 @@ def light_get():
     if sense.get_pixel(0, 0)[0] == 0:
         return &#39;{&quot;state&quot;:&quot;off&quot;}&#39;
     else:
-    return &#39;{&quot;state&quot;:&quot;on&quot;}&#39;
+        return &#39;{&quot;state&quot;:&quot;on&quot;}&#39;
 
 if __name__ == &quot;__main__&quot;:
     app.run(host=&#39;0.0.0.0&#39;, port=5000, debug=True)</code></pre>
