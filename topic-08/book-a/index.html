@@ -86,12 +86,12 @@ h3 {
         Wia Lab
       </a>
     
-      <a class="item" data-tab="photo-event">
-        photo-event
-      </a>
-    
       <a class="item" data-tab="web-page">
         web-page
+      </a>
+    
+      <a class="item" data-tab="photo-event">
+        photo-event
       </a>
     
       <a class="item" data-tab="wia-flow">
@@ -201,6 +201,41 @@ All going well, your  <code>overview</code> tab should now look like this and up
 
         </div>
       
+        <div class="ui tab segment lab" data-tab="web-page">
+          <h1>Web Page</h1>
+<ul>
+<li>In the same directory as your python script, create a new directory called <code>html</code>.</li>
+<li>Create a file called <code>index.html</code> and add the following content:</li>
+</ul>
+<pre><code class="lang-html">  &lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+
+    &lt;h1&gt;SenseHat Data&lt;/h1&gt;
+
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<ul>
+<li>Navigate back to your Wia Dashboard. In the overview for your device, you can see your widgets. In the upper right hand corner of the widget, there should be a box with an arrow. Click the box. A screen like this should pop up.</li>
+</ul>
+<p><img src="./img/widget-share.png" alt="Embed Widget"></p>
+<ul>
+<li>Select <code>Anyone can view this widget and embed it in any website.</code> You should also see Embed code, which will start with <code>&lt;iframe&gt;</code> and end with <code>&lt;/iframe&gt;</code>. Copy the entire code and paste it below the <code>&lt;h1&gt;SenseHat Weather Station&lt;/h1&gt;</code> line and above the <code>&lt;/body&gt;</code> line.</li>
+<li>View your <code>index.html</code> page in a browser. It should look similar to the following:</li>
+</ul>
+<p><img src="./img/html-page.png" alt="HTML Page"></p>
+<h2>Put it on the web</h2>
+<p>You can use GitHub to host your webpage so that anybody on the web can view it.</p>
+<p>If you don&#39;t have a github account already, <a href="https://github.com/">you can make one here</a>.</p>
+<p>Once you are set up with github, create a new repository and name it <code>your-github-username.github.io</code>. Check the box to initialize with a README.</p>
+<p>Now, navigate to your new repository and create a new file. It must be named index.html. Copy and paste the code from <code>index.html</code>.
+Click commit changes. Now, visit your site at <a href="https://username.github.io">https://username.github.io</a>. You&#39;re on the Web!</p>
+
+        </div>
+      
         <div class="ui tab segment lab" data-tab="photo-event">
           <h2>Smile, you&#39;re on camera.</h2>
 <p>You will now use Wia events, commands and flows to control the SenseHat using facial expressions.
@@ -305,41 +340,6 @@ else:
 <li>Look into the camera and press andy key. Your photo will be published as an event on Wia. Log into Wia and you should see the event recorded, similar to the following.</li>
 </ul>
 <p><img src="./img/photo-event.png" alt="The photo event"></p>
-
-        </div>
-      
-        <div class="ui tab segment lab" data-tab="web-page">
-          <h1>Web Page</h1>
-<ul>
-<li>In the same directory as your python script, create a new directory called <code>html</code>.</li>
-<li>Create a file called <code>index.html</code> and add the following content:</li>
-</ul>
-<pre><code class="lang-html">  &lt;!DOCTYPE html&gt;
-&lt;html&gt;
-  &lt;head&gt;
-    &lt;meta charset=&quot;UTF-8&quot;&gt;
-  &lt;/head&gt;
-  &lt;body&gt;
-
-    &lt;h1&gt;SenseHat Data&lt;/h1&gt;
-
-  &lt;/body&gt;
-&lt;/html&gt;</code></pre>
-<ul>
-<li>Navigate back to your Wia Dashboard. In the overview for your device, you can see your widgets. In the upper right hand corner of the widget, there should be a box with an arrow. Click the box. A screen like this should pop up.</li>
-</ul>
-<p><img src="./img/widget-share.png" alt="Embed Widget"></p>
-<ul>
-<li>Select <code>Anyone can view this widget and embed it in any website.</code> You should also see Embed code, which will start with <code>&lt;iframe&gt;</code> and end with <code>&lt;/iframe&gt;</code>. Copy the entire code and paste it below the <code>&lt;h1&gt;SenseHat Weather Station&lt;/h1&gt;</code> line and above the <code>&lt;/body&gt;</code> line.</li>
-<li>View your <code>index.html</code> page in a browser. It should look similar to the following:</li>
-</ul>
-<p><img src="./img/html-page.png" alt="HTML Page"></p>
-<h2>Put it on the web</h2>
-<p>You can use GitHub to host your webpage so that anybody on the web can view it.</p>
-<p>If you don&#39;t have a github account already, <a href="https://github.com/">you can make one here</a>.</p>
-<p>Once you are set up with github, create a new repository and name it <code>your-github-username.github.io</code>. Check the box to initialize with a README.</p>
-<p>Now, navigate to your new repository and create a new file. It must be named index.html. Copy and paste the code from <code>index.html</code>.
-Click commit changes. Now, visit your site at <a href="https://username.github.io">https://username.github.io</a>. You&#39;re on the Web!</p>
 
         </div>
       
